@@ -1,4 +1,4 @@
-id,name,image,description,stats
+id,name,image,description,starting_stats
 17f69d71826l0i32gkm3ndn3kywxqj,Hero,https://eldenring.fanapis.com/images/classes/17f69d71826l0i32gkm3ndn3kywxqj.png,"A stalwart Hero, at home with a battleaxe, descended from a badlands chieftain","{'level': '7', 'vigor': '14', 'mind': '9', 'endurance': '12', 'strength': '16', 'dexterity': '9', 'intelligence': '7', 'faith': '8', 'arcane': '11'}"
 17f69b2dd76l0i32gljr3f62pkzhjo,Warrior,https://eldenring.fanapis.com/images/classes/17f69b2dd76l0i32gljr3f62pkzhjo.png,A twinblade wielding warrior from a nomadic tribe. An origin of exceptional technique,"{'level': '8', 'vigor': '11', 'mind': '12', 'endurance': '11', 'strength': '10', 'dexterity': '16', 'intelligence': '10', 'faith': '8', 'arcane': '9'}"
 17f69874f7bl0i32gmqaffmbfral8f,Astrologer,https://eldenring.fanapis.com/images/classes/17f69874f7bl0i32gmqaffmbfral8f.png,A scholar who reads fate in the stars. Heir to the school of glintstone sorcery,"{'level': '6', 'vigor': '9', 'mind': '15', 'endurance': '9', 'strength': '8', 'dexterity': '12', 'intelligence': '16', 'faith': '7', 'arcane': '9'}"

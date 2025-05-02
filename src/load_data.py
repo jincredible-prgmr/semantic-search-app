@@ -11,7 +11,7 @@ Functions:
 import pandas as pd
 import os
 from config import categories, DATA_DIR
-from chunker import row_to_chunk
+from chunker import row_to_chunk, clean_chunk
 
 
 def load_data() -> list:
@@ -41,11 +41,11 @@ def load_category_data(category) -> list:
     path = os.path.join(DATA_DIR, f"{category.lower()}.csv")
     df = pd.read_csv(path, index_col=False)
 
-    # Iterate through rows and return chunked data as list of dicts
+    # Build chunk dict with cleaned content and metadata
     return [
         {
             "id" : row['id'],
-            "chunk" : row_to_chunk(row, category),
+            "chunk" : clean_chunk(row_to_chunk(row, category)),
             "metadata" : {"category" : category}
         }
         for idx, row in df.iterrows()
@@ -53,9 +53,9 @@ def load_category_data(category) -> list:
 
 
 def test_cat(category):
-    return load_category_data(category)
+    print(load_category_data(category)[0].get('chunk'))
 
-print(load_data())
+test_cat('Weapons')
 
     
 
