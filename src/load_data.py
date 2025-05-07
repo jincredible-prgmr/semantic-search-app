@@ -55,7 +55,11 @@ def load_category_data(category) -> list:
 def test_cat(category):
     print(load_category_data(category)[0].get('chunk'))
 
-test_cat('Weapons')
+def get_one_chunk(category):
+    return load_category_data(category)[0]
+
+#test_cat('Weapons')
+load_data()
 
     
 
