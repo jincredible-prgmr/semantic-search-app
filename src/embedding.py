@@ -10,7 +10,7 @@ def get_embedding_fn():
     assert os.getenv("OPENAI_API_KEY"), "API key not loaded!"
     return OpenAIEmbeddings(model="text-embedding-3-small")
 
-def embed_store_chunks(chunks):
+def embed_chunks(chunks):
     embedding_fn = get_embedding_fn()
     texts = [chunk.get("chunk") for chunk in chunks]
     print(f"Embedding {len(texts)} chunks")
@@ -22,6 +22,24 @@ def embed_store_chunks(chunks):
         persist_directory="chroma_db/"
     )
     vector_store.persist()
+
+def test_embed_subset(chunks):
+    embed_chunks(chunks)
+
+def embed_store_data(chunks):
+    embed_chunks(chunks)
+
+def query_db(query, k):
+    embedding_fn = get_embedding_fn()
+    vector_store = Chroma(
+        persist_directory="chroma_db/",  # must match what you used when saving
+        embedding_function=embedding_fn
+    )
+    results = vector_store.similarity_search(query, k=k)
+    for i, doc in enumerate(results, 1):
+        print(f"\n--- Result {i} ---")
+        print("Content:", doc.page_content)
+        print("Metadata:", doc.metadata)
 
 
 
