@@ -60,6 +60,8 @@ def get_one_chunk(category):
 
 #test_cat('Weapons')
 #load_data()
+chunk = get_one_chunk("Weapons")
+print(chunk.get('chunk'))
 
     
 

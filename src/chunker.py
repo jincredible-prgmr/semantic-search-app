@@ -116,10 +116,10 @@ def clean_chunk(raw_chunk: str) -> str:
         if line.startswith("Attack:") or line.startswith("Defence:"):
             label = label.strip()
             stat_parts = [
-                f"{expand_stat_label(stat.strip().split(":")[0])} {stat.strip().split(":")[1]}"
+                f"{expand_stat_label(stat.strip().split(":")[0])}:{stat.strip().split(":")[1]}"
                 for stat in stats.split(",") if ":" in stat
             ]
-            cleaned_lines.append(f"{label} Stats: {', '.join(stat_parts)}.")
+            cleaned_lines.append(f"{label} Stats: \n- {'\n- '.join(stat_parts)}")
 
         elif line.startswith("Scales_with:"):
             parts = []
