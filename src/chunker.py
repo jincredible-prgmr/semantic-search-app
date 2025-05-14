@@ -35,6 +35,11 @@ def row_to_chunk(row, category):
         if col in special:
             formatted_stat = safe_parse_stat_field(row[col])
             parts.append(f"{col.capitalize()}: {formatted_stat}" )
+            """
+            if col == "attack" or col == "defence":
+                summary = summarize_stats(formatted_stat, col, category)
+                parts.append(f"{col.capitalize()} Summary: {summary}" )
+            """
         else:
             parts.append(f"{col.capitalize()}: {row[col]}" )
 
@@ -116,10 +121,10 @@ def clean_chunk(raw_chunk: str) -> str:
         if line.startswith("Attack:") or line.startswith("Defence:"):
             label = label.strip()
             stat_parts = [
-                f"{expand_stat_label(stat.strip().split(":")[0])}:{stat.strip().split(":")[1]}"
+                f"{expand_stat_label(stat.strip().split(":")[0])}{stat.strip().split(":")[1]}"
                 for stat in stats.split(",") if ":" in stat
             ]
-            cleaned_lines.append(f"{label} Stats: \n- {'\n- '.join(stat_parts)}")
+            cleaned_lines.append(f"{label} Stats: {', '.join(stat_parts)}")
 
         elif line.startswith("Scales_with:"):
             parts = []
@@ -140,6 +145,37 @@ def clean_chunk(raw_chunk: str) -> str:
 
     return '\n'.join(cleaned_lines)
 
+"""
+def summarize_stats(stats, col, category):
+    stats_dict = dict()
+    stat_list = stats.split(',')
+    category = category[0:len(category)-1]
+
+
+    for stat in stat_list:
+        name_val = stat.split(':')
+        label = expand_stat_label(name_val[0].strip())
+        val = name_val[1].strip()
+        val = 0 if not val.isdigit() else int(val)
+        stats_dict[label] = val
+
+    summary = []
+    dmg_def = "damage" if col == "attack" else "defence"
+
+    if stats_dict.get("Physical", 0) > 130:
+        summary.append(f"high physical {dmg_def}")
+    if stats_dict.get("Critical", 0) >= 100:
+        summary.append("excellent critical strike potential")
+    if stats_dict.get("Guard Boost", 0) >= 30:
+        summary.append("excellent Guard Boost")
+    if all(stats_dict.get(stat, 0) == 0 for stat in ["Magic", "Fire", "Lightning", "Holy"]):
+        summary.append(f"no elemental {dmg_def}")
+    for stat in ["Magic", "Fire", "Lightning", "Holy"]:
+        if stats_dict.get(stat, 0) > 50:
+            summary.append(f"high {stat} {dmg_def}")
+
+    return f"This {category} has " + ', '.join(summary)
+"""
 def expand_stat_label(label):
     return {
         "Phy": "Physical",

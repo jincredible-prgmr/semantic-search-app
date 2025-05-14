@@ -32,7 +32,7 @@ def embed_store_data(chunks):
 def query_db(query, k):
     embedding_fn = get_embedding_fn()
     vector_store = Chroma(
-        persist_directory="chroma_db/",  # must match what you used when saving
+        persist_directory="chroma_db/",  
         embedding_function=embedding_fn
     )
     results = vector_store.similarity_search(query, k=k)
