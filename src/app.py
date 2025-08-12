@@ -9,7 +9,7 @@ embed_chunks(chunks)
 
 
 
-query_db("What swords have a Magic attack stat > 60", 8)
+query_db("Sword with attack stat 98", 6)
 
 
 
