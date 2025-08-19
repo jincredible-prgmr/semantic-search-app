@@ -1,6 +1,6 @@
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
+from langchain_chroma import Chroma
 from dotenv import load_dotenv
-from langchain.vectorstores import Chroma
 import os
 
 
@@ -9,6 +9,12 @@ def get_embedding_fn():
     load_dotenv()
     assert os.getenv("OPENAI_API_KEY"), "API key not loaded!"
     return OpenAIEmbeddings(model="text-embedding-3-small")
+
+def get_vector_store():
+    persist_dir = "chroma_db/"
+    embedding = get_embedding_fn()
+    vs = Chroma(collection_name="langchain", embedding_function=embedding, persist_directory=persist_dir)
+    return vs
 
 def embed_chunks(chunks):
     embedding_fn = get_embedding_fn()
