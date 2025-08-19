@@ -4,25 +4,9 @@ from retriever import get_rag
 
 
 """
+#Chunk workflow
 chunks = load_data()
 embed_chunks(chunks)
-"""
-
-
-
-#query_db("Sword with attack stat 98", 6)
-"""
-qa = get_qa()
-res = qa.run('What is the best sword?')
-
-print(res)
-"""
-
-"""retriever = get_retriever()
-docs = retriever.get_relevant_documents("What is the best weapon and why?")
-print(len(docs))
-for d in docs:
-    print(d.metadata, d.page_content[:150])
 """
 
 rag = get_rag(k=5, search_type="mmr")

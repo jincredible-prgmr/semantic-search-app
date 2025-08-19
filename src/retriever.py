@@ -26,15 +26,6 @@ def get_rag(k=8, search_type='mmr'):
         model="gpt-4o-mini",
         temperature=0
     )
-    """
-    #Old Deprecated Version
-    return RetrievalQA.from_chain_type(
-        llm=llm,
-        retriever=retriever,
-        chain_type="stuff",  # can swap to map_reduce later
-        return_source_documents=False
-    )
-    """
     prompt = ChatPromptTemplate.from_template(
         "Use the context to answer the question. Be concise.\n\n"
         "Context:\n{context}\n\nQuestion: {input}"
