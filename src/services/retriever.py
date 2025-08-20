@@ -1,10 +1,8 @@
 from langchain_openai import ChatOpenAI 
-from langchain.chains import RetrievalQA
-from embedding import get_vector_store
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
-
+from src.embeddings.embedding import get_vector_store
 
 
 def get_retriever(k=8, search_type="mmr", score_threshold=None, filters=None):
@@ -33,8 +31,6 @@ def get_rag(k=8, search_type='mmr'):
     doc_chain = create_stuff_documents_chain(llm, prompt)
     rag_chain = create_retrieval_chain(retriever, doc_chain)
     return rag_chain
-
-
 
 
 

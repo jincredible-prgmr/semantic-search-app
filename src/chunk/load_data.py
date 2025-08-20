@@ -11,7 +11,7 @@ Functions:
 import pandas as pd
 import os
 from config import categories, DATA_DIR
-from chunker import row_to_chunk, clean_chunk
+from src.chunk.chunker import row_to_chunk, clean_chunk
 
 
 def load_data() -> list:

@@ -1,6 +1,6 @@
-from load_data import load_data
-from embedding import embed_chunks, query_db, get_vector_store
-from retriever import get_rag
+from src.chunk.load_data import load_data
+from src.embeddings.embedding import embed_chunks, query_db, get_vector_store
+from src.services.retriever import get_rag
 
 
 """
