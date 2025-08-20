@@ -2,7 +2,7 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
-from src.embeddings.embedding import get_vector_store
+from src.embedding import get_vector_store
 
 
 def get_retriever(k=8, search_type="mmr", score_threshold=None, filters=None):

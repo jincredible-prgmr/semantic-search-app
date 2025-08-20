@@ -1,27 +1,30 @@
-from src.chunk.load_data import load_data
-from src.embeddings.embedding import embed_chunks, query_db, get_vector_store
-from src.services.retriever import get_rag
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from src.api.routers import health, query
+from dotenv import load_dotenv
+from src.deps import set_chain
+from src.retriever import get_rag
+import os
 
+load_dotenv()
 
-"""
-#Chunk workflow
-chunks = load_data()
-embed_chunks(chunks)
-"""
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    chain = get_rag()
+    set_chain(chain)         # stash in a module-level holder for DI
+    yield
+    # any teardown if needed
 
-rag = get_rag(k=5, search_type="mmr")
-out = rag.invoke({"input": "Which sword has the greatest magic attack?"})
-print(out["answer"])
-# If you want to see the retrieved docs:
-for i, d in enumerate(out["context"], 1):
-    print(f"\n--- DOC {i} ---\n{d.metadata}\n{d.page_content[:500]}")
+def create_app() -> FastAPI:
+    app = FastAPI(title="Semantic Search API", version="0.1.0", lifespan=lifespan)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=os.getenv("ALLOWED_ORIGINS"),
+        allow_methods=["*"], allow_headers=["*"], allow_credentials=True,
+    )
+    app.include_router(health.router)
+    app.include_router(query.router, prefix="/v1")
+    return app
 
-
-
-
-
-
-
-
-
-
+app = create_app()
