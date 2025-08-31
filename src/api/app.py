@@ -5,9 +5,10 @@ from src.api.routers import health, query
 from dotenv import load_dotenv
 from src.deps import set_chain
 from src.retriever import get_rag
+from src.core.logging import RequestContextMiddleware, setup_logging
 import os
 
-load_dotenv()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -27,4 +28,8 @@ def create_app() -> FastAPI:
     app.include_router(query.router, prefix="/v1")
     return app
 
+
+load_dotenv()
+setup_logging()
 app = create_app()
+app.add_middleware(RequestContextMiddleware)
