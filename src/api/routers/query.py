@@ -1,13 +1,24 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from src.schemas.query import QueryRequest, QueryResponse, SourceDoc
 from src.deps import get_chain
+import asyncio
 
 router = APIRouter(tags=['semantic'])
+REQUEST_TIMEOUT = 25
 
 @router.post('/query')
 async def query_enpoint(req: QueryRequest) -> QueryResponse: 
     chain = get_chain()
-    result = await chain.ainvoke({"input" : req.query})
+    
+    try:
+        result = await asyncio.wait_for(
+            chain.ainvoke({"input": req.query}),  # the real work
+            timeout=REQUEST_TIMEOUT                            # hard cap in seconds
+        )
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Model timeout")
+
+    #result = await chain.ainvoke({"input" : req.query})
     #print("RAW OUT:", result)
     answer, docs = normalize_chain_output(result)
     sources = [
