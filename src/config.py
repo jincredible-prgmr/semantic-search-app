@@ -1,8 +1,20 @@
-
 import os
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    OPENAI_API_KEY: str
+    VECTOR_DB_PATH: str
+    MODEL_NAME: str = "gpt-4o-mini"
+    ALLOWED_ORIGINS: list[str] = ["http://localhost:3000"]
+    REQUEST_TIMEOUT_SEC: int = 25
+
+    class Config:
+        env_file = ".env"  # auto-loads from your .env file
+
+# create a singleton
+settings = Settings()
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data/elden-ring-data')
-
 
 """
 Config to retreive desired fields for each category

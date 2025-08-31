@@ -3,6 +3,7 @@ from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from src.embedding import get_vector_store
+from src.config import settings
 
 
 def get_retriever(k=8, search_type="mmr", score_threshold=None, filters=None):
@@ -21,7 +22,7 @@ def get_retriever(k=8, search_type="mmr", score_threshold=None, filters=None):
 def get_rag(k=8, search_type='mmr'):
     retriever = get_retriever(k, search_type)
     llm = ChatOpenAI(
-        model="gpt-4o-mini",
+        model=settings.MODEL_NAME,
         temperature=0
     )
     prompt = ChatPromptTemplate.from_template(

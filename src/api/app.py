@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from src.deps import set_chain
 from src.retriever import get_rag
 from src.core.logging import RequestContextMiddleware, setup_logging
-import os
+from src.config import settings
 
 
 
@@ -21,7 +21,7 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Semantic Search API", version="0.1.0", lifespan=lifespan)
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=os.getenv("ALLOWED_ORIGINS"),
+        allow_origins=settings.ALLOWED_ORIGINS,
         allow_methods=["*"], allow_headers=["*"], allow_credentials=True,
     )
     app.include_router(health.router)
