@@ -11,8 +11,7 @@ Functions:
 - format_stats(stat_list): Formats list of dicts to readable chunk
 """
 
-import pandas as pd
-import ast
+import ast, re, pandas as pd
 from config import field_config, special_fields
 
 
@@ -35,7 +34,7 @@ def row_to_chunk(row, category):
     for col in fields:
         if col in special:
             formatted_stat = safe_parse_stat_field(row[col])
-            parts.append(f"{col.capitalize()}:\n{formatted_stat}" )
+            parts.append(f"{col.capitalize()}: {formatted_stat}" )
         else:
             parts.append(f"{col.capitalize()}: {row[col]}" )
 
@@ -64,10 +63,10 @@ def safe_parse_stat_field(field):
             return format_stats(parsed)
         # If it's a list of strs -> strip additional " creating issues (drops)
         if isinstance(parsed, list):
-            return "\n".join([item.strip("\"'") for item in parsed])
+            return ", ".join([item.strip("\"'") for item in parsed])
         # If its a regular dict (stats)
         if isinstance(parsed, dict):
-            return "\n".join([f"{key}: {value}" for key, value in parsed.items()])
+            return ", ".join([f"{key}: {value}" for key, value in parsed.items()])
 
         # Fallback to string
         return str(parsed)
@@ -97,7 +96,70 @@ def format_stats(stat_list):
         else:
             formatted.append(str(entry))  # fallback if weird dict
 
-    return "\n".join(formatted)
+    return ", ".join(formatted)
+
+def clean_chunk(raw_chunk: str) -> str:
+    """
+    Cleans raw weapon chunk text into a natural language format for better embeddings.
+    """
+    lines = raw_chunk.splitlines()
+    cleaned_lines = []
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        label, stats = line.split(":", 1)
+        stats = stats.strip()
+        if not stats:
+            continue
+        if line.startswith("Attack:") or line.startswith("Defence:"):
+            label = label.strip()
+            stat_parts = [
+                f"{expand_stat_label(stat.strip().split(":")[0])} {stat.strip().split(":")[1]}"
+                for stat in stats.split(",") if ":" in stat
+            ]
+            cleaned_lines.append(f"{label} Stats: {', '.join(stat_parts)}.")
+
+        elif line.startswith("Scales_with:"):
+            parts = []
+            for stat in stats.split(","):
+                key, val = stat.strip().split(":")
+                parts.append(f"{expand_attr_label(key.strip())} at grade {val.strip()}")
+            cleaned_lines.append(f"This weapon scales with {', '.join(parts)}.")
+
+        elif line.startswith("Required_attributes:"):
+            parts = []
+            for stat in stats.split(","):
+                key, val = stat.strip().split(":")
+                parts.append(f"{expand_attr_label(key.strip())} {val.strip()}")
+            cleaned_lines.append(f"Requirements: {', '.join(parts)}.")
+
+        else:
+            cleaned_lines.append(line)
+
+    return '\n'.join(cleaned_lines)
+
+def expand_stat_label(label):
+    return {
+        "Phy": "Physical",
+        "Mag": "Magic",
+        "Fire": "Fire",
+        "Ligt": "Lightning",
+        "Holy": "Holy",
+        "Crit": "Critical",
+        "Boost": "Guard Boost"
+    }.get(label, label)
+
+def expand_attr_label(label):
+    return {
+        "Str": "Strength",
+        "Dex": "Dexterity",
+        "Fai": "Faith",
+        "Int": "Intelligence",
+        "Arc": "Arcane"
+    }.get(label, label)
+
 
 
 
