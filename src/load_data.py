@@ -55,7 +55,8 @@ def load_category_data(category) -> list:
 def test_cat(category):
     print(load_category_data(category)[0].get('chunk'))
 
-test_cat('Weapons')
+if __name__ == "__main__":
+    test_cat('Weapons')
 
     
 

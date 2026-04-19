@@ -2,6 +2,8 @@
 import os
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data/elden-ring-data')
+CHROMA_DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'chroma_db')
+COLLECTION_NAME = "elden_ring"
 
 
 """
